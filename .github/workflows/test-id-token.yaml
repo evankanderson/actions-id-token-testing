@@ -14,4 +14,6 @@ jobs:
           echo $GITHUB_TOKEN
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api%3A%2F%2Fdefault"
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
-          jq <.action-token
+          jq .value <.action-token > .action-token-value
+          file .action-token-value
+          jq <.action-token-value
