@@ -28,3 +28,4 @@ jobs:
           MINDER_GRPC_SERVER_INSECURE: true
         run: |
           minder ruletype apply -f ./rule-types
+          minder profile apply -f ./profiles
