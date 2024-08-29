@@ -14,3 +14,4 @@ jobs:
           echo $ACTIONS_ID_TOKEN_REQUEST_URL
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api%3A%2F%2Fdefault"
           echo $URL
+          curl -kvv $URL
