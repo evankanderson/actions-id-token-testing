@@ -1,0 +1,111 @@
+version: v1
+type: rule-type
+name: enable-iac
+severity:
+  value: medium
+context:
+  provider: github
+description: Enables automatic pushes of Minder rules from the selected repo.
+guidance: |
+  Here is where I would write something useful.
+
+  Instead, I refer you to https://github.com/stacklok/minder/pull/4317
+
+def:
+  in_entity: repository
+  rule_schema:
+    type: object
+    properties:
+      minder_project:
+        type: string
+    required: minder_project
+
+  # Defines the configuration for ingesting data relevant for the rule
+  ingest:
+    type: git
+    git:
+      branch: main
+
+  # Defines the configuration for evaluating data ingested against the given profile
+  eval:
+    type: rego
+    rego:
+      type: deny-by-default
+      def: |
+        package minder
+
+        default allow := false
+
+        allow {
+            # List all workflows
+            workflows := file.ls("./.github/workflows")
+
+            # Read all workflows
+            some w
+            workflowstr := file.read(workflows[w])
+
+            workflow := yaml.unmarshal(workflowstr)
+
+            on_push
+            on_push if workflow.on == "push"
+            on_push if workflow.on[_] == "push"
+            on_push if workflow.on["push"].branches[_] = "main"
+
+            # Iterate jobs
+            job := workflow.jobs[_]
+
+            # Iterate steps
+            step := job.steps[_]
+
+            # Check if the step is a trivy action
+            startswith(step.uses, "stacklok/minder-client-installer@")
+        }
+
+  remediate:
+    type: pull_request
+    pull_request:
+      title: "Set up IaC with Minder"
+      body: |
+        This is a Minder automated pull request.
+
+        This pull request adds a GitHub actions workflow that applies rule types and policies
+        from the `rule-types` and `policies` directory at the root of the repo.
+      contents:
+        - path: .github/workflows/minder-iac.yml
+          action: replace
+          content: |
+            name: Minder Apply IaC repo
+
+            on:
+              push:
+                branches:
+                - main
+
+            jobs:
+              apply-iac:
+                runs-on: ubuntu-latest
+                name: Apply Minder Policies And RuleTypes
+                steps:
+                  - name: Fetch ID token
+                    run: |
+                      set -x -e
+                      echo $GITHUB_TOKEN
+                      URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=minder"
+                      curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
+                      echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
+                  - name: Install cosign to verify Minder
+                    uses: sigstore/cosign-installer@v3.6.0
+                  - uses: Install Minder Client
+                    stacklok/minder-client-installer@main
+                  - name: Checkout
+                    uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+                  - name: Apply Minder ruletypes
+                    env:
+                      MINDER_PROJECT: {{ .Profile.minder_project }}
+                      # Very temporary!  My ngrok endpoint
+                      MINDER_GRPC_SERVER_PORT: 13401
+                      MINDER_GRPC_SERVER_HOST: 0.tcp.us-cal-1.ngrok.io
+                      MINDER_GRPC_SERVER_INSECURE: true
+                    run: |
+                      minder ruletype apply -f ./rule-types
+                      minder profile apply -f ./profiles

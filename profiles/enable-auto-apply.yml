@@ -1,0 +1,16 @@
+version: v1
+type: profile
+name: enable-iac
+display_name: Profile which enables an Infrastructure-as-Code flow for Minder
+context:
+  provider: github
+selection:
+- entity: repository
+  selector: repository.name == 'evankanderson/actions-id-token-testing'
+alert: "off"
+remediate: "on"
+repository:
+  - type: enable_iac
+    def:
+      # TODO: this _should_ be accessible as a variable
+      minder_project: 14ac1534-e81a-4060-b4b8-bff2f1ee076a
