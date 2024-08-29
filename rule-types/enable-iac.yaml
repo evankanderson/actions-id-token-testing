@@ -93,8 +93,8 @@ def:
                       echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
                   - name: Install cosign to verify Minder
                     uses: sigstore/cosign-installer@v3.6.0
-                  - uses: Install Minder Client
-                    stacklok/minder-client-installer@main
+                  - name: Install Minder Client
+                    uses: stacklok/minder-client-installer@main
                   - name: Checkout
                     uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
                   - name: Apply Minder ruletypes
