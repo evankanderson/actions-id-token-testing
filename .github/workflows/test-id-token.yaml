@@ -1,0 +1,13 @@
+name: Check id token
+on: workflow_dispatch
+
+jobs:
+  check_id_token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check id token
+        run: |
+          echo $GITHUB_TOKEN
+          echo $ACTIONS_ID_TOKEN_REQUEST_URL
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api%3A%2F%2Fdefault"
+          echo $URL
