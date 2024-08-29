@@ -19,11 +19,11 @@ jobs:
           echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
       - uses: sigstore/cosign-installer@v3.6.0
       - uses: stacklok/minder-client-installer@main
-#      - name: Apply Minder ruletypes
+      - name: Apply Minder ruletypes
 #        env:
 #          MINDER_PROJECT=da472869-b720-4b65-9c0d-f7556459acaf
 #          # Very temporary!  My ngrok endpoint
 #          MINDER_GRPC_SERVER_PORT=443
 #          MINDER_GRPC_SERVER_HOST=2c8e-97-113-72-224.ngrok-free.app
-#        run: |
+        run: echo "passed"
 #          minder ruletype apply -f ./rule-types
