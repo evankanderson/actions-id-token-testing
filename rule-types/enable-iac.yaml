@@ -18,7 +18,8 @@ def:
     properties:
       minder_project:
         type: string
-    required: minder_project
+    required:
+    - minder_project
 
   # Defines the configuration for ingesting data relevant for the rule
   ingest:
