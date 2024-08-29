@@ -10,7 +10,7 @@ selection:
 alert: "off"
 remediate: "on"
 repository:
-  - type: enable_iac
+  - type: enable-iac
     def:
       # TODO: this _should_ be accessible as a variable
       minder_project: 14ac1534-e81a-4060-b4b8-bff2f1ee076a
