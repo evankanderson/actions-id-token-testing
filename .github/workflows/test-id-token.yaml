@@ -1,6 +1,9 @@
 name: Check id token
 on: workflow_dispatch
 
+permissions:
+  id-token: write
+
 jobs:
   check_id_token:
     runs-on: ubuntu-latest
