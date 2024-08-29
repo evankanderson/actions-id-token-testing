@@ -16,4 +16,4 @@ jobs:
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
           jq .value <.action-token > .action-token-value
           file .action-token-value
-          jq <.action-token-value
+          head -c 4 .action-token-value
