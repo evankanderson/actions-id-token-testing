@@ -16,3 +16,37 @@ jobs:
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
           jq -r .value <.action-token > .action-token-value
           tr '.' '\n' <.action-token-value | sed 's/eyJ/EYj/'
+
+# An extracted JWT has the following payload:
+# {
+#   "jti": "4980945b-8fb1-434f-a338-5dd16d3c1bf1",
+#   "sub": "repo:evankanderson/actions-id-token-testing:ref:refs/heads/main",
+#   "aud": "api://default",
+#   "ref": "refs/heads/main",
+#   "sha": "6d76f8e6723f5f35a61a530fe341a9ed1133669f",
+#   "repository": "evankanderson/actions-id-token-testing",
+#   "repository_owner": "evankanderson",
+#   "repository_owner_id": "7959095",
+#   "run_id": "10607796861",
+#   "run_number": "13",
+#   "run_attempt": "1",
+#   "repository_visibility": "public",
+#   "repository_id": "849114962",
+#   "actor_id": "7959095",
+#   "actor": "evankanderson",
+#   "workflow": "Check id token",
+#   "head_ref": "",
+#   "base_ref": "",
+#   "event_name": "workflow_dispatch",
+#   "ref_protected": "false",
+#   "ref_type": "branch",
+#   "workflow_ref": "evankanderson/actions-id-token-testing/.github/workflows/test-id-token.yaml@refs/heads/main",
+#   "workflow_sha": "6d76f8e6723f5f35a61a530fe341a9ed1133669f",
+#   "job_workflow_ref": "evankanderson/actions-id-token-testing/.github/workflows/test-id-token.yaml@refs/heads/main",
+#   "job_workflow_sha": "6d76f8e6723f5f35a61a530fe341a9ed1133669f",
+#   "runner_environment": "github-hosted",
+#   "iss": "https://token.actions.githubusercontent.com",
+#   "nbf": 1724898939,
+#   "exp": 1724899839,
+#   "iat": 1724899539
+# }
