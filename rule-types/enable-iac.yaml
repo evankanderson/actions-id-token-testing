@@ -47,10 +47,7 @@ def:
 
             workflow := yaml.unmarshal(workflowstr)
 
-            on_push
-            on_push if workflow.on == "push"
-            on_push if workflow.on[_] == "push"
-            on_push if workflow.on["push"].branches[_] = "main"
+            workflow.on["push"].branches[_] = "main"
 
             # Iterate jobs
             job := workflow.jobs[_]
