@@ -28,4 +28,5 @@ jobs:
           MINDER_GRPC_SERVER_INSECURE: true
         run: |
           minder ruletype apply -f ./rule-types
-          minder profile apply -f ./profiles
+          # Minder ruletype apply takes a directory, but profile apply does not!!
+          minder profile apply -f ./profiles/enable-auto-apply.yaml
