@@ -10,8 +10,9 @@ jobs:
     steps:
       - name: Check id token
         run: |
+          set -x -e
           echo $GITHUB_TOKEN
           echo $ACTIONS_ID_TOKEN_REQUEST_URL
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=api%3A%2F%2Fdefault"
           echo $URL
-          curl -v -H "Bearer: $GITHUB_TOKEN" $URL
+          curl -v -H "Authorization: Bearer $GITHUB_TOKEN" $URL
