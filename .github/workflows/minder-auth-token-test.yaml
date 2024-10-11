@@ -9,7 +9,7 @@ jobs:
   install-rule-type:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       - name: Fetch ID token
         run: |
           set -x -e
@@ -17,8 +17,8 @@ jobs:
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=minder"
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
           echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
-      - uses: sigstore/cosign-installer@v3.6.0
-      - uses: stacklok/minder-client-installer@main
+      - uses: sigstore/cosign-installer@4959ce089c160fddf62f7b42464195ba1a56d382 # v3.6.0
+      - uses: stacklok/minder-client-installer@0d4c5ed9a8dc6a2d152beeaf7b9cfb1fb5556dca # main
       - name: Apply Minder ruletypes
         env:
           MINDER_PROJECT: 14ac1534-e81a-4060-b4b8-bff2f1ee076a
