@@ -13,4 +13,4 @@ repository:
   - type: enable-iac
     def:
       # TODO: this _should_ be accessible as a variable
-      minder_project: 14ac1534-e81a-4060-b4b8-bff2f1ee076a
+      minder_project: abe95d6a-d53e-4f34-b7c2-d11a79e5db8d
