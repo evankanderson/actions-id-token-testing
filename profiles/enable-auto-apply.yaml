@@ -15,4 +15,5 @@ repository:
       # TODO: this _should_ be accessible as a variable
       minder_project: d718c263-debf-4960-b00c-e41c54c3658e
   - type: actions_check_pinned_tags
-    def: {}
+    def:
+      exclude: []
