@@ -18,7 +18,7 @@ jobs:
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
           echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
       - uses: sigstore/cosign-installer@v3.6.0
-      - uses: stacklok/minder-client-installer@main
+      - uses: mindersec/minder-client-installer@main
       - name: Apply Minder ruletypes
         env:
           MINDER_PROJECT: 52d8c0d5-27ff-420b-852d-4106d21775c7
