@@ -18,7 +18,50 @@ jobs:
           curl -o .action-token -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $URL
           echo "MINDER_AUTH_TOKEN=$(jq -r .value <.action-token)" >> "$GITHUB_ENV"
       - uses: sigstore/cosign-installer@v3.6.0
-      - uses: mindersec/minder-client-installer@main
+      #- uses: mindersec/minder-client-installer@main
+      - run: |
+          shopt -s expand_aliases
+          if [ -z "$NO_COLOR" ]; then
+            alias log_info="echo -e \"\033[1;32mINFO\033[0m:\""
+            alias log_error="echo -e \"\033[1;31mERROR\033[0m:\""
+          else
+            alias log_info="echo \"INFO:\""
+            alias log_error="echo \"ERROR:\""
+          fi
+          set -e
+          minder_executable_name=minder
+          release_version=$(curl -s https://api.github.com/repos/mindersec/minder/releases/latest | jq -r '.tag_name')
+          # Remove the 'v' prefix from the release version
+          release_number=$(echo $release_version | sed 's/v//')
+          # Determine file name based on OS
+          case ${{ runner.os }} in
+            Linux|linux)
+              case ${{ runner.arch }} in
+                X64|amd64)
+                  desired_minder_filename="minder_${release_number}_linux_amd64"
+                  ;;
+                ARM64|arm64)
+                  desired_minder_filename="minder_${release_number}_linux_arm64"
+                  ;;
+                *)
+                  log_error "unsupported architecture ${{ runner.arch }}"
+                  exit 1
+                  ;;
+              esac
+              ;;
+            esac
+            # Download the desired release
+            curl -fsL https://github.com/mindersec/minder/releases/download/${release_version}/${desired_minder_filename}${compression_extension} -o ${desired_minder_filename}${compression_extension}
+            log_info "Extracting desired release"
+            case ${{ runner.os }} in
+              Linux|linux)
+                tar -xzf ${desired_minder_filename}${compression_extension}
+                ;;
+            esac
+
+            # Make the extracted file executable
+            log_info "Making extracted file executable"
+            chmod +x ${minder_executable_name}
       - name: Apply Minder ruletypes
         env:
           MINDER_PROJECT: 52d8c0d5-27ff-420b-852d-4106d21775c7
